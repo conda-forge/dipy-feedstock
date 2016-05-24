@@ -32,6 +32,8 @@ requirements:
     - libgcc  # [not win]
     - vtk  # [py27]
 test:
+  requires:
+    - nose
   imports:
     - dipy
 
