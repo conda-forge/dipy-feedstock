@@ -31,11 +31,12 @@ requirements:
     - pytables
     - libgcc  # [not win]
     - vtk  # [py27]
+
 test:
-  requires:
-    - nose
   imports:
     - dipy
+  commands:
+    - conda inspect linkages -n _test dipy  # [linux]
 
 about:
   home: https://nipy.org/dipy
