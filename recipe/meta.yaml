@@ -27,8 +27,9 @@ requirements:
     - nibabel
     - scikit-learn
     - matplotlib
+    - pytables
     - libgcc  # [not win]
-    - vtk  # [py27]
+    - vtk
 test:
   imports:
     - dipy
