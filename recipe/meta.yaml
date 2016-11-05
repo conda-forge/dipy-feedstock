@@ -28,7 +28,7 @@ requirements:
     - scikit-learn
     - matplotlib
     - libgcc  # [not win]
-    - vtk  # [py27]
+    - vtk
 test:
   imports:
     - dipy
