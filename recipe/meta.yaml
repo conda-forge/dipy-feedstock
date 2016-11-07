@@ -27,7 +27,7 @@ requirements:
     - nibabel
     - scikit-learn
     - matplotlib
-    - cvxopt
+    - cvxopt  # [not win]
     - pytables
     - libgcc  # [not win]
     - vtk  # [py27]
