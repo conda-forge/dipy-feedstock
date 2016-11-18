@@ -33,7 +33,6 @@ conda search dipy --channel conda-forge
 ```
 
 
-
 About conda-forge
 =================
 
