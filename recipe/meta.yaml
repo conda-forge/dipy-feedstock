@@ -37,7 +37,7 @@ test:
 
 about:
   home: https://nipy.org/dipy
-  license:  3-clause BSD license
+  license:  3-clause BSD
   license_file: LICENSE
   summary: Diffusion MR Imaging in Python
 
