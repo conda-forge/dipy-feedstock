@@ -3,13 +3,25 @@ About dipy
 
 Home: https://nipy.org/dipy
 
-Package license: 3-clause BSD license
+Package license: 3-clause BSD
 
 Feedstock license: BSD 3-Clause
 
 Summary: Diffusion MR Imaging in Python
 
 
+
+Current build status
+====================
+
+Linux: [![Circle CI](https://circleci.com/gh/conda-forge/dipy-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/dipy-feedstock)
+OSX: [![TravisCI](https://travis-ci.org/conda-forge/dipy-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/dipy-feedstock)
+Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/conda-forge/dipy-feedstock?svg=True)](https://ci.appveyor.com/project/conda-forge/dipy-feedstock/branch/master)
+
+Current release info
+====================
+Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dipy/badges/version.svg)](https://anaconda.org/conda-forge/dipy)
+Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dipy/badges/downloads.svg)](https://anaconda.org/conda-forge/dipy)
 
 Installing dipy
 ===============
@@ -66,18 +78,6 @@ Terminology
 
 **conda-forge** - the place where the feedstock and smithy live and work to
                   produce the finished article (built conda distributions)
-
-Current build status
-====================
-
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/dipy-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/dipy-feedstock)
-OSX: [![TravisCI](https://travis-ci.org/conda-forge/dipy-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/dipy-feedstock)
-Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/conda-forge/dipy-feedstock?svg=True)](https://ci.appveyor.com/project/conda-forge/dipy-feedstock/branch/master)
-
-Current release info
-====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dipy/badges/version.svg)](https://anaconda.org/conda-forge/dipy)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dipy/badges/downloads.svg)](https://anaconda.org/conda-forge/dipy)
 
 
 Updating dipy-feedstock
