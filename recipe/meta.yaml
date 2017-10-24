@@ -20,13 +20,13 @@ build:
 requirements:
   build:
     - python
-    - numpy x.x
+    - numpy
     - nibabel
     - cython
     - gcc  # [not win]
   run:
     - python
-    - numpy x.x
+    - numpy
     - scipy
     - nibabel
     - scikit-learn
