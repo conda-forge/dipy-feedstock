@@ -6,7 +6,8 @@ package:
 
 source:
   fn: dipy-{{ version }}.tar.gz
-  url: https://pypi.python.org/packages/04/dd/08f9a35a8351d32c1f659821dd72c0549954c126a3d68cc17002ae1dff07/dipy-{{ version }}.tar.gz
+  url:
+    https://pypi.python.org/packages/26/52/a64d196965ec1455371347684a910d3f62aee1d3dac07d00cc68ea5230d0/dipy-{{ version }}.tar.gz
   md5: 72a1d734f7b9545fac46e720e157ac79
 
 build:
