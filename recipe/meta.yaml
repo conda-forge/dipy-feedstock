@@ -8,7 +8,7 @@ source:
   fn: dipy-{{ version }}.tar.gz
   url:
     https://pypi.python.org/packages/26/52/a64d196965ec1455371347684a910d3f62aee1d3dac07d00cc68ea5230d0/dipy-{{ version }}.tar.gz
-  md5: 72a1d734f7b9545fac46e720e157ac79
+  md5: 3c3589974e4cc5b71d7e4e6d563dcbfa
 
 build:
     number: 1
