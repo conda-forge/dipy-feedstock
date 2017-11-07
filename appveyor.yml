@@ -6,7 +6,7 @@
 # Post-conda-smithy customization: build on this OS until we can figure out
 # how to workaround a compiler bug introduced in Update 3.
 os:
-  - Visual Studio 2015 Update 2
+    - Visual Studio 2015 Update 2
 
 environment:
 
