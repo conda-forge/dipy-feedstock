@@ -14,14 +14,16 @@ Summary: Diffusion MR Imaging in Python
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/dipy-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/dipy-feedstock)
-OSX: [![TravisCI](https://travis-ci.org/conda-forge/dipy-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/dipy-feedstock)
-Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/conda-forge/dipy-feedstock?svg=True)](https://ci.appveyor.com/project/conda-forge/dipy-feedstock/branch/master)
+[![Linux](https://img.shields.io/circleci/project/github/conda-forge/dipy-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/dipy-feedstock)
+[![OSX](https://img.shields.io/travis/conda-forge/dipy-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/dipy-feedstock)
+[![Windows](https://img.shields.io/appveyor/ci/conda-forge/dipy-feedstock/master.svg?label=Windows)](https://ci.appveyor.com/project/conda-forge/dipy-feedstock/branch/master)
 
 Current release info
 ====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dipy/badges/version.svg)](https://anaconda.org/conda-forge/dipy)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/dipy/badges/downloads.svg)](https://anaconda.org/conda-forge/dipy)
+
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-dipy-green.svg)](https://anaconda.org/conda-forge/dipy) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/dipy.svg)](https://anaconda.org/conda-forge/dipy) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/dipy.svg)](https://anaconda.org/conda-forge/dipy) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/dipy.svg)](https://anaconda.org/conda-forge/dipy) |
 
 Installing dipy
 ===============
