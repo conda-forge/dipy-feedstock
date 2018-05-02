@@ -1,4 +1,4 @@
-{% set version = "0.13.0" %}
+{% set version = "0.14.0" %}
 
 package:
   name: dipy
@@ -7,8 +7,8 @@ package:
 source:
   fn: dipy-{{ version }}.tar.gz
   url:
-    https://pypi.python.org/packages/26/52/a64d196965ec1455371347684a910d3f62aee1d3dac07d00cc68ea5230d0/dipy-{{ version }}.tar.gz
-  md5: 3c3589974e4cc5b71d7e4e6d563dcbfa
+    https://files.pythonhosted.org/packages/55/c6/447e170205d056413118bb8db2ae35b9ea294ecb152f7afe120ab99fd5b1/dipy-{{ version }}.tar.gz
+  md5: 1800c6efb73d6989a2655c83b2ac226f38417f0002ef92ca9613aef99a697de3
 
 build:
     number: 1
