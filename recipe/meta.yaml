@@ -1,50 +1,47 @@
 {% set version = "0.14.0" %}
+{% set name = "dipy" %}
 
 package:
   name: dipy
   version: {{ version }}
 
 source:
-  fn: dipy-{{ version }}.tar.gz
-  url:
-    https://files.pythonhosted.org/packages/55/c6/447e170205d056413118bb8db2ae35b9ea294ecb152f7afe120ab99fd5b1/dipy-{{ version }}.tar.gz
-  md5: 2a0f81ccaed6fad7c0776462ea18ad29
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 1800c6efb73d6989a2655c83b2ac226f38417f0002ef92ca9613aef99a697de3
 
 build:
-    number: 1
-    script:
-      - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and py3k]
-      - python setup.py install
-    features:
-        - vc9  # [win and py27]
-        - vc10  # [win and py34]
-        - vc14  # [win and py35]
+  number: 1
+  script:
+    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
+    - python -m pip install --no-deps --ignore-installed .
 
 requirements:
   build:
+    - {{ compiler('c') }}
+  host:
     - python
     - numpy
     - nibabel
     - cython
-    - gcc  # [not win]
+    - pip
   run:
     - python
-    - numpy
+    - {{ pin_compatible('numpy') }}
     - scipy
     - nibabel
     - scikit-learn
     - matplotlib
     - cvxopt  # [not win]
     - pytables
-    - libgcc  # [not win]
     - vtk  # [py27]
+
 test:
   imports:
     - dipy
 
 about:
   home: https://nipy.org/dipy
-  license:  3-clause BSD
+  license: BSD-3-Clause
   license_file: LICENSE
   summary: Diffusion MR Imaging in Python
 
