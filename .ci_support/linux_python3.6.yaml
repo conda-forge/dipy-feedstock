@@ -4,7 +4,11 @@ numpy:
 - '1.9'
 pin_run_as_build:
   python:
-    min_pin: x.x
     max_pin: x.x
+    min_pin: x.x
+  vtk:
+    max_pin: x.x.x
 python:
 - '3.6'
+vtk:
+- 8.1.1
