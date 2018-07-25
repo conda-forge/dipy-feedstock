@@ -10,13 +10,16 @@ source:
   sha256: 1800c6efb73d6989a2655c83b2ac226f38417f0002ef92ca9613aef99a697de3
 
 build:
-  number: 1
+  number: 2
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - python -m pip install --no-deps --ignore-installed .
 
 requirements:
   build:
+    - {{ pin_compatible('numpy') }}
+    - {{ compiler('c') }}
+  host:
     - {{ compiler('c') }}
   host:
     - python
@@ -26,7 +29,6 @@ requirements:
     - pip
   run:
     - python
-    - {{ pin_compatible('numpy') }}
     - scipy
     - nibabel
     - scikit-learn
