@@ -10,7 +10,7 @@ source:
   sha256: 06db0bc1b44b8d38097945597edcfabca4316c64adee5c29d28ffad12d96135b
 
 build:
-  number: 0
+  number: 1
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - python -m pip install --no-deps --ignore-installed .
@@ -30,7 +30,7 @@ requirements:
     - scipy
     - nibabel
     - scikit-learn
-    - matplotlib
+    - matplotlib-base
     - cvxopt  # [not win]
     - pytables
     - vtk  # [py27]
