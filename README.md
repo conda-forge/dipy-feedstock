@@ -1,7 +1,7 @@
 About dipy
 ==========
 
-Home: https://nipy.org/dipy
+Home: https://dipy.org
 
 Package license: BSD-3-Clause
 
