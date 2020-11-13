@@ -39,7 +39,7 @@ requirements:
     - tqdm
     - h5py
     - pandas
-    - tables
+    - pytables
     - scikit-image
     - statsmodels
 
