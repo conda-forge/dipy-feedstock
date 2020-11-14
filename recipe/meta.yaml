@@ -33,13 +33,12 @@ requirements:
     - nibabel
     - scikit-learn
     - matplotlib-base
-    - cvxpy
+    - cvxpy   # [py<39]
     - pytables
     - vtk  # [py<39]
     - tqdm
     - h5py
     - pandas
-    - pytables
     - scikit-image
     - statsmodels
 
