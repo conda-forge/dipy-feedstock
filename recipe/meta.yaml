@@ -35,7 +35,7 @@ requirements:
     - matplotlib-base
     - cvxpy
     - pytables
-    - vtk # [py<39]
+    - vtk  # [py<39]
     - tqdm
     - h5py
     - pandas
