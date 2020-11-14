@@ -10,7 +10,7 @@ source:
   sha256: c5be00719a01f63be0e22eed389eaa0ec2423a863e16a83dea3e9eeaa9cf6034
 
 build:
-  number: 0
+  number: 1
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - python -m pip install --no-deps --ignore-installed .
@@ -24,6 +24,8 @@ requirements:
     - nibabel
     - cython
     - pip
+    - tqdm
+    - h5py
   run:
     - python
     - {{ pin_compatible('numpy') }}
@@ -31,16 +33,21 @@ requirements:
     - nibabel
     - scikit-learn
     - matplotlib-base
-    - cvxopt  # [not win]
+    - cvxpy   # [py<39]
     - pytables
-    - vtk  # [py27]
+    - vtk  # [py<39]
+    - tqdm
+    - h5py
+    - pandas
+    - scikit-image
+    - statsmodels
 
 test:
   imports:
     - dipy
 
 about:
-  home: https://nipy.org/dipy
+  home: https://dipy.org
   license: BSD-3-Clause
   license_file: LICENSE
   summary: Diffusion MR Imaging in Python
