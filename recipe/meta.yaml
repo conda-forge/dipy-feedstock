@@ -10,7 +10,7 @@ source:
   sha256: 56d3e028bdbe554cf734b4f53255ee68ed5d069cb1fddb0201b53a8ad16d57cd
 
 build:
-  number: 0
+  number: 1
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - python -m pip install --no-deps --ignore-installed .
