@@ -1,4 +1,4 @@
-{% set version = "1.3.0" %}
+{% set version = "1.4.0" %}
 {% set name = "dipy" %}
 
 package:
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: c5be00719a01f63be0e22eed389eaa0ec2423a863e16a83dea3e9eeaa9cf6034
+  sha256: 56d3e028bdbe554cf734b4f53255ee68ed5d069cb1fddb0201b53a8ad16d57cd
 
 build:
-  number: 1
+  number: 0
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - python -m pip install --no-deps --ignore-installed .
