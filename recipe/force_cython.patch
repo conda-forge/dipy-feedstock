@@ -1,0 +1,14 @@
+diff --git a/setup.cfg b/setup.cfg
+index f0efed002..fe13b778b 100644
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -2,4 +2,7 @@
+ license_file = LICENSE
+ 
+ [tool:pytest]
+-addopts = --ignore=dipy/testing/decorators.py
+\ No newline at end of file
++addopts = --ignore=dipy/testing/decorators.py
++
++[build_ext]
++force=1
