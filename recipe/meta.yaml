@@ -10,7 +10,7 @@ source:
   sha256: a19cf40166be09c5b7c31ab00b12fed136ae9531483a9cd7019cc3f3b95f6271
   patches:
     # This can be removed once the sdist is Python 3.11 compatible
-    # cython.patch
+    - cython.patch
 build:
   number: 2
   script:
@@ -21,12 +21,14 @@ requirements:
   build:
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - cython                                 # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
     - {{ compiler('c') }}
   host:
     - python
     - numpy
     - nibabel
+    - cython
     - pip
     - tqdm
     - h5py
