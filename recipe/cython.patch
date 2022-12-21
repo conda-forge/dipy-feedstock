@@ -4,7 +4,7 @@
  addopts = --ignore=dipy/testing/decorators.py
 
  [egg_info]
- tag_build =
+ tag_build = 
  tag_date = 0
 
 +[build_ext]
