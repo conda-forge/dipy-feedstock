@@ -1,14 +1,12 @@
 --- a/setup.cfg	2022-11-02 09:58:25.164820743 -0400
 +++ b/setup.cfg	2022-11-02 10:21:01.578971753 -0400
-@@ -5,6 +5,8 @@
- addopts = --ignore=dipy/testing/decorators.py
-
- [egg_info]
- tag_build = 
- tag_date = 0
-
+@@ -1,3 +1,6 @@
 +[build_ext]
 +force=1
++
+ [metadata]
+ license_file = LICENSE
+
 --- a/cythexts.py	2022-11-02 10:20:32.915320969 -0400
 +++ b/cythexts.py	2022-11-02 10:20:41.891211829 -0400
 @@ -33,6 +33,7 @@
@@ -20,12 +18,6 @@
      stamps = {}
      for mod in exts:
 new file mode 100644
---- /dev/null
-+++ b/dipy/align/fused_types.pxd
-@@ -0,0 +1,3 @@
-+cimport cython
-+ctypedef cython.floating floating
-+ctypedef cython.numeric number
 --- a/dipy/direction/pmf.pyx
 +++ b/dipy/direction/pmf.pyx
 @@ -105,7 +105,7 @@ cdef class BootPmfGen(PmfGen):
@@ -36,3 +28,624 @@ new file mode 100644
 +            cnp.ndarray x, y, z, r
              double[:] theta, phi
              double[:, :] B
+
+--- /dev/null
++++ b/dipy/align/fused_types.pxd
+@@ -0,0 +1,3 @@
++cimport cython
++ctypedef cython.floating floating
++ctypedef cython.numeric number
+new file mode 100644
+index 000000000..7f26dd54d
+--- /dev/null
++++ b/dipy/align/transforms.pxd
+@@ -0,0 +1,7 @@
++cdef class Transform:
++    cdef:
++        int number_of_parameters
++        int dim
++    cdef int _jacobian(self, double[:] theta, double[:] x, double[:, :] J)nogil
++    cdef void _get_identity_parameters(self, double[:] theta) nogil
++    cdef void _param_to_matrix(self, double[:] theta, double[:, :] T)nogil
+new file mode 100644
+index 000000000..3e1100385
+--- /dev/null
++++ b/dipy/align/vector_fields.pxd
+@@ -0,0 +1,52 @@
++#!python
++#cython: boundscheck=False
++#cython: wraparound=False
++#cython: cdivision=True
++
++cdef inline double _apply_affine_3d_x0(double x0, double x1, double x2,
++                                       double h, double[:, :] aff) nogil:
++    r"""Multiplies aff by (x0, x1, x2, h), returns the 1st element of product
++
++    Returns the first component of the product of the homogeneous matrix aff by
++    (x0, x1, x2, h)
++    """
++    return aff[0, 0] * x0 + aff[0, 1] * x1 + aff[0, 2] * x2 + h*aff[0, 3]
++
++
++cdef inline double _apply_affine_3d_x1(double x0, double x1, double x2,
++                                       double h, double[:, :] aff) nogil:
++    r"""Multiplies aff by (x0, x1, x2, h), returns the 2nd element of product
++
++    Returns the first component of the product of the homogeneous matrix aff by
++    (x0, x1, x2, h)
++    """
++    return aff[1, 0] * x0 + aff[1, 1] * x1 + aff[1, 2] * x2 + h*aff[1, 3]
++
++
++cdef inline double _apply_affine_3d_x2(double x0, double x1, double x2,
++                                       double h, double[:, :] aff) nogil:
++    r"""Multiplies aff by (x0, x1, x2, h), returns the 3d element of product
++
++    Returns the first component of the product of the homogeneous matrix aff by
++    (x0, x1, x2, h)
++    """
++    return aff[2, 0] * x0 + aff[2, 1] * x1 + aff[2, 2] * x2 + h*aff[2, 3]
++
++
++cdef inline double _apply_affine_2d_x0(double x0, double x1, double h,
++                                       double[:, :] aff) nogil:
++    r"""Multiplies aff by (x0, x1, h), returns the 1st element of product
++    Returns the first component of the product of the homogeneous matrix aff by
++    (x0, x1, h)
++    """
++    return aff[0, 0] * x0 + aff[0, 1] * x1 + h*aff[0, 2]
++
++
++cdef inline double _apply_affine_2d_x1(double x0, double x1, double h,
++                                       double[:, :] aff) nogil:
++    r"""Multiplies aff by (x0, x1, h), returns the 2nd element of product
++
++    Returns the first component of the product of the homogeneous matrix aff by
++    (x0, x1, h)
++    """
++    return aff[1, 0] * x0 + aff[1, 1] * x1 + h*aff[1, 2]
+new file mode 100644
+index 000000000..d93d748f2
+--- /dev/null
++++ b/dipy/core/interpolation.pxd
+@@ -0,0 +1,36 @@
++
++cimport numpy as cnp
++from dipy.align.fused_types cimport floating, number
++
++cpdef trilinear_interpolate4d(
++    double[:, :, :, :] data,
++    double[:] point,
++    cnp.ndarray out=*)
++
++cdef int trilinear_interpolate4d_c(
++    double[:, :, :, :] data,
++    double* point,
++    double[:] result) nogil
++
++cdef int _interpolate_vector_2d(floating[:, :, :] field, double dii,
++                                double djj, floating *out) nogil
++cdef int _interpolate_scalar_2d(floating[:, :] image, double dii,
++                                double djj, floating *out) nogil
++cdef int _interpolate_scalar_nn_2d(number[:, :] image, double dii,
++                                   double djj, number *out) nogil
++cdef int _interpolate_scalar_nn_3d(number[:, :, :] volume, double dkk,
++                                   double dii, double djj,
++                                   number *out) nogil
++cdef int _interpolate_scalar_3d(floating[:, :, :] volume,
++                                double dkk, double dii, double djj,
++                                floating *out) nogil
++cdef int _interpolate_vector_3d(floating[:, :, :, :] field, double dkk,
++                                double dii, double djj,
++                                floating* out) nogil
++cdef void _trilinear_interpolation_iso(double *X,
++                                       double *W,
++                                       cnp.npy_intp *IN) nogil
++cdef cnp.npy_intp offset(cnp.npy_intp *indices,
++                         cnp.npy_intp *strides,
++                         int lenind,
++                         int typesize) nogil
+new file mode 100644
+index 000000000..cda8cea44
+--- /dev/null
++++ b/dipy/core/pyalloc.pxd
+@@ -0,0 +1,13 @@
++# -*- python -*- or rather like
++
++from python_string cimport PyString_FromStringAndSize, PyString_AS_STRING
++
++
++# Function to allocate, wrap memory via Python string creation
++cdef inline object pyalloc_v(Py_ssize_t n, void **pp):
++    cdef object ob = PyString_FromStringAndSize(NULL, n)
++    pp[0] = <void*> PyString_AS_STRING(ob)
++    return ob
++
++
++
+new file mode 100644
+index 000000000..edf8c877a
+--- /dev/null
++++ b/dipy/direction/closest_peak_direction_getter.pxd
+@@ -0,0 +1,47 @@
++cimport numpy as cnp
++
++from dipy.direction.pmf cimport PmfGen
++from dipy.tracking.direction_getter cimport DirectionGetter
++
++cdef int closest_peak(cnp.ndarray[cnp.float_t, ndim=2] peak_dirs,
++                      double* direction, double cos_similarity)
++
++cdef class BasePmfDirectionGetter(DirectionGetter):
++
++    cdef:
++        object sphere
++        dict _pf_kwargs
++        PmfGen pmf_gen
++        double pmf_threshold
++        double cos_similarity
++
++    cpdef cnp.ndarray[cnp.float_t, ndim=2] initial_direction(
++        self,
++        double[::1] point)
++
++    cdef _get_pmf(
++        self,
++        double* point)
++
++    cpdef int get_direction(
++        self,
++        double[::1] point,
++        double[::1] direction) except -1
++
++    cdef int get_direction_c(
++        self,
++        double* point,
++        double* direction)
++
++cdef class BaseDirectionGetter(BasePmfDirectionGetter):
++
++    pass
++
++cdef class PmfGenDirectionGetter(BasePmfDirectionGetter):
++
++    pass
++
++
++cdef class ClosestPeakDirectionGetter(PmfGenDirectionGetter):
++
++    pass
+new file mode 100644
+index 000000000..bfdc8de8c
+--- /dev/null
++++ b/dipy/direction/pmf.pxd
+@@ -0,0 +1,36 @@
++cimport numpy as np
++
++cdef class PmfGen:
++    cdef:
++        double[:] pmf
++        double[:, :, :, :] data
++        object sphere
++
++    cpdef double[:] get_pmf(self, double[::1] point)
++    cpdef double get_pmf_value(self, double[::1] point, double[::1] xyz)
++    cdef void __clear_pmf(self)
++    pass
++
++
++cdef class SimplePmfGen(PmfGen):
++    pass
++
++
++cdef class SHCoeffPmfGen(PmfGen):
++    cdef:
++        double[:, :] B
++        double[:] coeff
++    pass
++
++
++cdef class BootPmfGen(PmfGen):
++    cdef:
++        int sh_order
++        double[:, :] R
++        object model
++        object H
++        np.ndarray vox_data
++        np.ndarray dwi_mask
++
++    cpdef double[:] get_pmf_no_boot(self, double[::1] point)
++    pass
+new file mode 100644
+index 000000000..9602e2368
+--- /dev/null
++++ b/dipy/segment/clusteringspeed.pxd
+@@ -0,0 +1,114 @@
++from dipy.segment.cythonutils cimport Data2D, Shape
++from dipy.segment.metricspeed cimport Metric
++cimport numpy as cnp
++
++
++cdef struct QuickBundlesStats:
++    long nb_mdf_calls
++    long nb_aabb_calls
++
++
++cdef struct QuickBundlesXStatsLayer:
++    long nb_mdf_calls
++    long nb_aabb_calls
++
++
++cdef struct QuickBundlesXStats:
++    QuickBundlesXStatsLayer* stats_per_layer
++
++
++cdef struct StreamlineInfos:
++    Data2D* features
++    Data2D* features_flip
++    float[6] aabb
++    int idx
++    int use_flip
++
++
++cdef struct Centroid:
++    Data2D* features
++    int size
++    float[6] aabb
++
++
++cdef struct NearestCluster:
++    int id
++    double dist
++    int flip
++
++
++cdef struct Test:
++    Data2D* centroid
++
++
++cdef struct CentroidNode:
++    CentroidNode* father
++    CentroidNode** children
++    int nb_children
++    Data2D* centroid
++    float[6] aabb
++    float threshold
++    int* indices
++    int size
++    Shape centroid_shape
++    int level
++
++
++cdef class Clusters:
++    cdef int _nb_clusters
++    cdef int** clusters_indices
++    cdef int* clusters_size
++
++    cdef void c_assign(Clusters self, int id_cluster, int id_element, Data2D element) nogil except *
++    cdef int c_create_cluster(Clusters self) nogil except -1
++    cdef int c_size(Clusters self) nogil
++
++
++cdef class ClustersCentroid(Clusters):
++    cdef Centroid* centroids
++    cdef Centroid* _updated_centroids
++    cdef Shape _centroid_shape
++    cdef float eps
++    cdef void c_assign(ClustersCentroid self, int id_cluster, int id_element, Data2D element) nogil except *
++    cdef int c_create_cluster(ClustersCentroid self) nogil except -1
++    cdef int c_update(ClustersCentroid self, cnp.npy_intp id_cluster) nogil except -1
++
++
++cdef class QuickBundles(object):
++    cdef Shape features_shape
++    cdef Data2D features
++    cdef Data2D features_flip
++    cdef ClustersCentroid clusters
++    cdef Metric metric
++    cdef double threshold
++    cdef double aabb_pad
++    cdef int max_nb_clusters
++    cdef int bvh
++    cdef QuickBundlesStats stats
++
++    cdef NearestCluster find_nearest_cluster(QuickBundles self, Data2D features) nogil except *
++    cdef int assignment_step(QuickBundles self, Data2D datum, int datum_id) nogil except -1
++    cdef void update_step(QuickBundles self, int cluster_id) nogil except *
++    cdef object _build_clustermap(self)
++
++
++cdef class QuickBundlesX(object):
++    cdef CentroidNode* root
++    cdef Metric metric
++    cdef Shape features_shape
++    cdef Data2D features
++    cdef Data2D features_flip
++    cdef double* thresholds
++    cdef int nb_levels
++    cdef object level
++    cdef object clusters
++    cdef QuickBundlesXStats stats
++    cdef StreamlineInfos* current_streamline
++
++    cdef int _add_child(self, CentroidNode* node) nogil
++    cdef void _update_node(self, CentroidNode* node, StreamlineInfos* streamline_infos) nogil
++    cdef void _insert_in(self, CentroidNode* node, StreamlineInfos* streamline_infos, int[:] path) nogil
++    cpdef object insert(self, Data2D datum, int datum_idx)
++    cdef void traverse_postorder(self, CentroidNode* node, void (*visit)(QuickBundlesX, CentroidNode*))
++    cdef void _dealloc_node(self, CentroidNode* node)
++    cdef object _build_tree_clustermap(self, CentroidNode* node)
+\ No newline at end of file
+new file mode 100644
+index 000000000..8635587b0
+--- /dev/null
++++ b/dipy/segment/cythonutils.pxd
+@@ -0,0 +1,42 @@
++# cython: wraparound=False, cdivision=True, boundscheck=False
++
++cdef extern from "cythonutils.h":
++    enum: MAX_NDIM
++
++ctypedef float[:] Data1D
++ctypedef float[:,:] Data2D
++ctypedef float[:,:,:] Data3D
++ctypedef float[:,:,:,:] Data4D
++ctypedef float[:,:,:,:,:] Data5D
++ctypedef float[:,:,:,:,:,:] Data6D
++ctypedef float[:,:,:,:,:,:,:] Data7D
++
++ctypedef fused Data:
++    Data1D
++    Data2D
++    Data3D
++    Data4D
++    Data5D
++    Data6D
++    Data7D
++
++cdef struct Shape:
++   Py_ssize_t ndim
++   Py_ssize_t dims[MAX_NDIM]
++   Py_ssize_t size
++
++
++cdef Shape shape_from_memview(Data data) nogil
++
++
++cdef Shape tuple2shape(dims) except *
++
++
++cdef shape2tuple(Shape shape)
++
++
++cdef int same_shape(Shape shape1, Shape shape2) nogil
++
++cdef Data2D* create_memview_2d(Py_ssize_t buffer_size, Py_ssize_t dims[MAX_NDIM]) nogil
++
++cdef void free_memview_2d(Data2D* memview) nogil
+new file mode 100644
+index 000000000..b7a049b46
+--- /dev/null
++++ b/dipy/segment/featurespeed.pxd
+@@ -0,0 +1,26 @@
++from dipy.segment.cythonutils cimport Data2D, Shape
++cimport numpy as cnp
++
++cdef class Feature(object):
++    cdef int is_order_invariant
++
++    cdef Shape c_infer_shape(Feature self, Data2D datum) nogil except *
++    cdef void c_extract(Feature self, Data2D datum, Data2D out) nogil except *
++
++    cpdef infer_shape(Feature self, datum)
++    cpdef extract(Feature self, datum)
++
++
++cdef class CythonFeature(Feature):
++    pass
++
++# The IdentityFeature class returns the datum as-is. This is useful for metric
++# that does not require any pre-processing.
++cdef class IdentityFeature(CythonFeature):
++    pass
++
++# The ResampleFeature class returns the datum resampled. This is useful for
++# metric like SumPointwiseEuclideanMetric that does require a consistent
++# number of points between datum.
++cdef class ResampleFeature(CythonFeature):
++    cdef cnp.npy_intp nb_points
+new file mode 100644
+index 000000000..ff4bc0b5a
+--- /dev/null
++++ b/dipy/segment/metricspeed.pxd
+@@ -0,0 +1,13 @@
++from dipy.segment.cythonutils cimport Data2D, Shape
++from dipy.segment.featurespeed cimport Feature
++
++
++cdef class Metric(object):
++    cdef Feature feature
++    cdef int is_order_invariant
++
++    cdef double c_dist(Metric self, Data2D features1, Data2D features2) nogil except -1
++    cdef int c_are_compatible(Metric self, Shape shape1, Shape shape2) nogil except -1
++
++    cpdef double dist(Metric self, features1, features2) except -1
++    cpdef are_compatible(Metric self, shape1, shape2)
+new file mode 100644
+index 000000000..9ee7a0972
+--- /dev/null
++++ b/dipy/tracking/direction_getter.pxd
+@@ -0,0 +1,28 @@
++
++from dipy.tracking.stopping_criterion cimport (StreamlineStatus,
++                                               StoppingCriterion)
++
++cimport numpy as cnp
++
++cdef class DirectionGetter:
++
++    cpdef cnp.ndarray[cnp.float_t, ndim=2] initial_direction(
++        self, double[::1] point)
++
++    cpdef tuple generate_streamline(self,
++                                    double[::1] seed,
++                                    double[::1] dir,
++                                    double[::1] voxel_size,
++                                    double step_size,
++                                    StoppingCriterion stopping_criterion,
++                                    cnp.float_t[:, :] streamline,
++                                    StreamlineStatus stream_status,
++                                    int fixedstep)
++
++    cpdef int get_direction(
++        self,
++        double[::1] point,
++        double[::1] direction) except -1
++
++    cdef int get_direction_c(
++        self, double* point, double* direction)
+new file mode 100644
+index 000000000..e6aad084d
+--- /dev/null
++++ b/dipy/tracking/propspeed.pxd
+@@ -0,0 +1,7 @@
++cimport numpy as cnp
++
++cdef cnp.npy_intp _propagation_direction(double *point, double* prev, double* qa,
++                                double *ind, double *odf_vertices,
++                                double qa_thr, double ang_thr,
++                                cnp.npy_intp *qa_shape,cnp.npy_intp* strides,
++                                double *direction,double total_weight) nogil
+new file mode 100644
+index 000000000..044c8fe46
+--- /dev/null
++++ b/dipy/tracking/stopping_criterion.pxd
+@@ -0,0 +1,50 @@
++
++cpdef enum StreamlineStatus:
++    PYERROR = -2
++    OUTSIDEIMAGE = -1
++    INVALIDPOINT = 0
++    TRACKPOINT = 1
++    ENDPOINT = 2
++
++
++cdef class StoppingCriterion:
++    cdef:
++        double interp_out_double[1]
++        double[::1] interp_out_view
++    cpdef StreamlineStatus check_point(self, double[::1] point)
++    cdef StreamlineStatus check_point_c(self, double* point)
++
++
++cdef class BinaryStoppingCriterion(StoppingCriterion):
++    cdef:
++        unsigned char [:, :, :] mask
++    pass
++
++
++cdef class ThresholdStoppingCriterion(StoppingCriterion):
++    cdef:
++        double threshold
++        double[:, :, :] metric_map
++    pass
++
++
++cdef class AnatomicalStoppingCriterion(StoppingCriterion):
++    cdef:
++        double[:, :, :] include_map, exclude_map
++    cpdef double get_exclude(self, double[::1] point)
++    cdef get_exclude_c(self, double* point)
++    cpdef double get_include(self, double[::1] point)
++    cdef get_include_c(self, double* point)
++    pass
++
++
++cdef class ActStoppingCriterion(AnatomicalStoppingCriterion):
++    pass
++
++
++cdef class CmcStoppingCriterion(AnatomicalStoppingCriterion):
++    cdef:
++        double step_size
++        double average_voxel_size
++        double correction_factor
++    pass
+new file mode 100644
+index 000000000..633a29fc5
+--- /dev/null
++++ b/dipy/tracking/streamlinespeed.pxd
+@@ -0,0 +1,15 @@
++# cython: wraparound=False, cdivision=True, boundscheck=False
++
++ctypedef float[:, :] float2d
++ctypedef double[:, :] double2d
++
++ctypedef fused Streamline:
++    float2d
++    double2d
++
++
++cdef double c_length(Streamline streamline) nogil
++
++cdef void c_arclengths(Streamline streamline, double * out) nogil
++
++cdef void c_set_number_of_points(Streamline streamline, Streamline out) nogil
+new file mode 100644
+index 000000000..6d4943b0f
+--- /dev/null
++++ b/dipy/utils/fast_numpy.pxd
+@@ -0,0 +1,24 @@
++# cython: boundscheck=False
++# cython: initializedcheck=False
++# cython: wraparound=False
++
++cimport numpy as np
++
++# Replaces a numpy.searchsorted(arr, number, 'right')
++cdef int where_to_insert(
++        np.float_t* arr,
++        np.float_t number,
++        int size) nogil
++
++cdef void cumsum(
++        np.float_t* arr_in,
++        np.float_t* arr_out,
++        int N) nogil
++
++cdef void copy_point(
++        double * a,
++        double * b) nogil
++
++cdef void scalar_muliplication_point(
++        double * a,
++        double scalar) nogil
+new file mode 100644
+index 000000000..12288fb0e
+--- /dev/null
++++ b/dipy/utils/omp.pxd
+@@ -0,0 +1,4 @@
++#!python
++
++cdef void set_num_threads(num_threads)
++cdef void restore_default_num_threads()
+new file mode 100644
+index 000000000..3841d942f
+--- /dev/null
++++ b/src/safe_openmp.pxd
+@@ -0,0 +1,14 @@
++cdef extern from "conditional_omp.h":
++    ctypedef struct omp_lock_t:
++        pass
++    extern void omp_init_lock(omp_lock_t *) nogil
++    extern void omp_destroy_lock(omp_lock_t *) nogil
++    extern void omp_set_lock(omp_lock_t *) nogil
++    extern void omp_unset_lock(omp_lock_t *) nogil
++    extern int omp_test_lock(omp_lock_t *) nogil
++    extern void omp_set_dynamic(int dynamic_threads) nogil
++    extern void omp_set_num_threads(int num_threads) nogil
++    extern int omp_get_num_procs() nogil
++    extern int omp_get_max_threads() nogil
++    cdef int have_openmp
++
