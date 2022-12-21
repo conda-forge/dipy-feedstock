@@ -19,6 +19,7 @@
      # Calculate hashes for pyx and c files.  Check for presence of c files.
      stamps = {}
      for mod in exts:
+new file mode 100644
 --- /dev/null
 +++ b/dipy/align/fused_types.pxd
 @@ -0,0 +1,3 @@
