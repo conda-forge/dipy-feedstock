@@ -1,4 +1,4 @@
-{% set version = "1.5.0" %}
+{% set version = "1.6.0" %}
 {% set name = "dipy" %}
 
 package:
@@ -7,12 +7,12 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: a19cf40166be09c5b7c31ab00b12fed136ae9531483a9cd7019cc3f3b95f6271
+  sha256: 41a8487689ddff32f6c45bd046548f9c89a66306779c57c64d7f31400cc4fd6d
   patches:
     # This can be removed once the sdist is Python 3.11 compatible
     - cython.patch
 build:
-  number: 2
+  number: 0
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - python -m pip install --no-deps --ignore-installed .
