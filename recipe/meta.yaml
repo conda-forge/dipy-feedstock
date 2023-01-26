@@ -8,9 +8,6 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 41a8487689ddff32f6c45bd046548f9c89a66306779c57c64d7f31400cc4fd6d
-  patches:
-    # This can be removed once the sdist is Python 3.11 compatible
-    - cython.patch
 build:
   number: 0
   script:
