@@ -1,4 +1,4 @@
-{% set version = "1.7.0" %}
+{% set version = "1.8.0" %}
 {% set name = "dipy" %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 59bb647128aae7793215c813bb8ea35dae260ac9f0d938c724064f0af5a05cc3
+  sha256: cc3845585b6ccd5d7bf43094d52a00eb73111072eee36c2149fabdb1b071f008
 build:
   number: 0
   script:
