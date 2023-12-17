@@ -20,17 +20,20 @@ requirements:
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - cython                                 # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
-    - {{ compiler('c') }}
-    - meson-python
     - ninja
+    - pkg-config 
+    - {{ compiler('c') }}
   host:
     - python
+    - meson-python
     - numpy
     - nibabel
     - cython
     - pip
     - tqdm
     - h5py
+    - packaging
+    - trx-python
   run:
     - python
     - {{ pin_compatible('numpy') }}
