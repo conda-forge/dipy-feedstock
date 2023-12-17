@@ -21,6 +21,8 @@ requirements:
     - cython                                 # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
     - {{ compiler('c') }}
+    - meson-python
+    - ninja
   host:
     - python
     - numpy
