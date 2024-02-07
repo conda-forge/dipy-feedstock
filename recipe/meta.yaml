@@ -13,6 +13,7 @@ build:
   skip: true  # [py<38]
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
+    - meson ${MESON_ARGS} builddir/   # [arm64 and osx]
     - python -m pip install --no-deps --ignore-installed .
 
 requirements:
