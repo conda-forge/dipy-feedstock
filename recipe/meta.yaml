@@ -10,6 +10,7 @@ source:
   sha256: cc3845585b6ccd5d7bf43094d52a00eb73111072eee36c2149fabdb1b071f008
 build:
   number: 0
+  skip: true  # [py<38]
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - python -m pip install --no-deps --ignore-installed .
@@ -19,26 +20,26 @@ requirements:
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - cython                                 # [build_platform != target_platform]
+    - ninja                                  # [build_platform != target_platform]
+    - pkg-config                             # [build_platform != target_platform]
+    - meson-python                           # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
-    - ninja
-    - pkg-config 
     - {{ compiler('c') }}
   host:
     - python
     - meson-python
     - numpy
-    - nibabel
+    - ninja
+    - pkg-config
     - cython
     - pip
-    - tqdm
-    - h5py
     - packaging
-    - trx-python
   run:
     - python
     - {{ pin_compatible('numpy') }}
     - scipy
     - nibabel
+    - trx-python
     - scikit-learn
     - matplotlib-base
     - cvxpy   # [py<39]
