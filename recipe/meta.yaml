@@ -9,7 +9,7 @@ source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: cc3845585b6ccd5d7bf43094d52a00eb73111072eee36c2149fabdb1b071f008
 build:
-  number: 0
+  number: 1
   skip: true  # [py<38]
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
