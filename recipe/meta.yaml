@@ -32,6 +32,7 @@ requirements:
     - {{ compiler('cxx') }}
   host:
     - python
+    - python-build
     - meson-python
     - numpy
     - ninja
