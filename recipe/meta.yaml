@@ -1,4 +1,4 @@
-{% set version = "1.8.0" %}
+{% set version = "1.9.0" %}
 {% set name = "dipy" %}
 
 package:
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: cc3845585b6ccd5d7bf43094d52a00eb73111072eee36c2149fabdb1b071f008
+  sha256: eb0f7a211202d48f30961743528c86ec9804fcba8ca440a7484e0a113fa2cc4f
 build:
-  number: 1
-  skip: true  # [py<38]
+  number: 0
+  skip: true  # [py<39]
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - mkdir builddir  # [arm64 and osx]
