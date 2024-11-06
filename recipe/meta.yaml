@@ -9,7 +9,7 @@ source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: eb0f7a211202d48f30961743528c86ec9804fcba8ca440a7484e0a113fa2cc4f
 build:
-  number: 0
+  number: 1
   skip: true  # [py<39]
   script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
@@ -29,6 +29,7 @@ requirements:
     - meson-python                           # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
   host:
     - python
@@ -42,7 +43,6 @@ requirements:
     - packaging
   run:
     - python
-    - {{ pin_compatible('numpy') }}
     - scipy
     - nibabel
     - trx-python
