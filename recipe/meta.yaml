@@ -9,15 +9,13 @@ source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: b9c8559c1ceec118bd8ebafa1c654582fc13d64c66266ca4d15a2df2367be870
 build:
-  number: 0
-  skip: true  # [py<39]
+  number: 1
   script:
-    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
     - mkdir builddir  # [arm64 and osx]
     - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)  # [arm64 and osx]
     - ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir  # [arm64 and osx]
     - ${PYTHON} -m pip install dist/dipy*.whl  # [arm64 and osx]
-    - python -m pip install --no-deps --ignore-installed .  # [not arm64]
+    - {{ PYTHON }} -m pip install . -vv  # [not (arm64 and osx)]
 
 requirements:
   build:
@@ -29,7 +27,7 @@ requirements:
     - meson-python                           # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
     - {{ compiler('c') }}
-    - {{ stdlib("c") }}
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
   host:
     - python
@@ -43,15 +41,13 @@ requirements:
     - packaging
   run:
     - python
-    - {{ pin_compatible('numpy') }}
+    - numpy >=1.21.4
     - scipy
     - nibabel
     - trx-python
     - scikit-learn
     - matplotlib-base
-    - cvxpy   # [py<39]
     - pytables
-    - vtk  # [py<39]
     - tqdm
     - h5py
     - pandas
@@ -67,6 +63,7 @@ about:
   license: BSD-3-Clause
   license_file: LICENSE
   summary: Diffusion MR Imaging in Python
+  dev_url: https://github.com/dipy/dipy
 
 extra:
   recipe-maintainers:
