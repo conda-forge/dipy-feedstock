@@ -11,13 +11,11 @@ source:
 build:
   number: 1
   script:
-    # - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64   # [win64 and vc==14]
-    # - mkdir builddir  # [arm64 and osx]
-    # - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)  # [arm64 and osx]
-    # - ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir  # [arm64 and osx]
-    # - ${PYTHON} -m pip install dist/dipy*.whl  # [arm64 and osx]
-    # - python -m pip install --no-deps --ignore-installed .  # [not arm64]
-    - {{ PYTHON }} -m pip install . -vv
+    - mkdir builddir  # [arm64 and osx]
+    - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)  # [arm64 and osx]
+    - ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir  # [arm64 and osx]
+    - ${PYTHON} -m pip install dist/dipy*.whl  # [arm64 and osx]
+    - {{ PYTHON }} -m pip install . -vv  # [not arm64 and osx]
 
 requirements:
   build:
