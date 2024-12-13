@@ -271,6 +271,3 @@ Feedstock Maintainers
 * [@garyfallidis](https://github.com/garyfallidis/)
 * [@skoudoro](https://github.com/skoudoro/)
 
-
-<!-- dummy commit to enable rerendering -->
-
