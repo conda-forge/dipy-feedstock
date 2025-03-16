@@ -1,4 +1,4 @@
-{% set version = "1.10.0" %}
+{% set version = "1.11.0" %}
 {% set name = "dipy" %}
 
 package:
@@ -7,9 +7,9 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: b9c8559c1ceec118bd8ebafa1c654582fc13d64c66266ca4d15a2df2367be870
+  sha256: 5f9247ea7eee267305b02a7265bb0fe2d6918760b39c8fa6debfe8df7098ddd8
 build:
-  number: 1
+  number: 0
   script:
     - mkdir builddir  # [arm64 and osx]
     - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)  # [arm64 and osx]
