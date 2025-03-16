@@ -9,6 +9,8 @@ Package license: BSD-3-Clause
 
 Summary: Diffusion MR Imaging in Python
 
+Development: https://github.com/dipy/dipy
+
 Current build status
 ====================
 
