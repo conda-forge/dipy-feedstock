@@ -1,5 +1,7 @@
+schema_version: 1
+
 context:
-  name: "dipy"
+  name: dipy
   version: 1.11.0
   python_min: "3.10"
 
@@ -8,26 +10,31 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://pypi.org/packages/source/${{ name }}/${{ name }}/${{ name }}-${{ version }}.tar.gz
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/${{ name }}-${{ version }}.tar.gz
   sha256: 5f9247ea7eee267305b02a7265bb0fe2d6918760b39c8fa6debfe8df7098ddd8
 build:
   number: 0
   script:
-    - mkdir builddir  # [arm64 and osx]
-    - ${{ PYTHON }} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)  # [arm64 and osx]
-    - ${{ PYTHON }} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir  # [arm64 and osx]
-    - ${{ PYTHON }} -m pip install dist/dipy*.whl  # [arm64 and osx]
-    - ${{ PYTHON }} -m pip install . -vv  # [not (arm64 and osx)]
+    - if: arm64 and osx
+      then:
+        - mkdir builddir
+        - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)
+        - ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir
+        - ${PYTHON} -m pip install dist/dipy*.whl
+    - if: not (arm64 and osx)
+      then: ${{ PYTHON }} -m pip install . -vv
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_${{ target_platform }}     # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
-    - ninja                                  # [build_platform != target_platform]
-    - pkg-config                             # [build_platform != target_platform]
-    - meson-python                           # [build_platform != target_platform]
-    - numpy                                  # [build_platform != target_platform]
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - cython
+        - ninja
+        - pkg-config
+        - meson-python
+        - numpy
     - ${{ compiler('c') }}
     - ${{ stdlib('c') }}
     - ${{ compiler('cxx') }}
