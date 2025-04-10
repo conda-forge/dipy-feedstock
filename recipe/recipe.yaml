@@ -1,0 +1,83 @@
+schema_version: 1
+
+context:
+  name: dipy
+  version: 1.11.0
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/${{ name }}-${{ version }}.tar.gz
+  sha256: 5f9247ea7eee267305b02a7265bb0fe2d6918760b39c8fa6debfe8df7098ddd8
+build:
+  number: 0
+  skip: match(python, "<3.10")
+  script:
+    - if: arm64 and osx
+      then:
+        - mkdir builddir
+        - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)
+        - ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir
+        - ${PYTHON} -m pip install dist/dipy*.whl
+    - if: not (arm64 and osx)
+      then: ${{ PYTHON }} -m pip install . -vv
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - cython
+        - ninja
+        - pkg-config
+        - meson-python
+        - numpy
+    - ${{ compiler('c') }}
+    - ${{ stdlib('c') }}
+    - ${{ compiler('cxx') }}
+  host:
+    - python
+    - python-build
+    - meson-python
+    - numpy
+    - ninja
+    - pkg-config
+    - cython
+    - pip
+    - packaging
+  run:
+    - python
+    - numpy >=1.21.4
+    - scipy
+    - nibabel
+    - trx-python
+    - scikit-learn
+    - matplotlib-base
+    - pytables
+    - tqdm
+    - h5py
+    - pandas
+    - scikit-image
+    - statsmodels
+
+tests:
+  - python:
+      imports:
+        - dipy
+
+about:
+  homepage: https://dipy.org
+  license: BSD-3-Clause
+  license_file: LICENSE
+  summary: Diffusion MR Imaging in Python
+  repository: https://github.com/dipy/dipy
+  documentation: https://dipy.org
+
+extra:
+  recipe-maintainers:
+    - arokem
+    - garyfallidis
+    - skoudoro
