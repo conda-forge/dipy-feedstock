@@ -12,7 +12,7 @@ source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/${{ name }}-${{ version }}.tar.gz
   sha256: 5f9247ea7eee267305b02a7265bb0fe2d6918760b39c8fa6debfe8df7098ddd8
 build:
-  number: 1
+  number: 2
   skip: match(python, "<3.10")
   script:
     - if: arm64 and osx
@@ -21,9 +21,7 @@ build:
         - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)
         - ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir
         - ${PYTHON} -m pip install dist/dipy*.whl
-    - if: not (arm64 and osx)
-      then: ${{ PYTHON }} -m pip install . -vv
-
+      else: ${{ PYTHON }} -m pip install . -vv
 requirements:
   build:
     - if: build_platform != target_platform
