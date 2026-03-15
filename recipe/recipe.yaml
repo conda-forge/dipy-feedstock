@@ -41,6 +41,7 @@ requirements:
     - python-build
     - meson-python
     - numpy
+    - scipy
     - ninja
     - pkg-config
     - cython
@@ -48,18 +49,13 @@ requirements:
     - packaging
   run:
     - python
-    - numpy >=1.21.4
-    - scipy
-    - nibabel
-    - trx-python
-    - scikit-learn
-    - matplotlib-base
-    - pytables
-    - tqdm
-    - h5py
-    - pandas
-    - scikit-image
-    - statsmodels
+    - numpy >=1.22.4
+    - scipy >=1.8
+    - nibabel >=3.0.0
+    - trx-python >=0.4.0
+    - tqdm >=4.30.0
+    - h5py >=3.1.0
+    - packaging >=21
 
 tests:
   - python:
