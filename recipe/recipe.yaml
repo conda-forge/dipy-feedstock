@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: dipy
-  version: 1.11.0
+  version: "1.12.0"
 
 package:
   name: ${{ name }}
@@ -10,10 +10,10 @@ package:
 
 source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/${{ name }}-${{ version }}.tar.gz
-  sha256: 5f9247ea7eee267305b02a7265bb0fe2d6918760b39c8fa6debfe8df7098ddd8
+  sha256: 12523cd9dfe8a9c37f18a24c5a8cbad9cdb6bc8f52bf2671c51f891ed2bb7734
 build:
-  number: 1
-  skip: match(python, "<3.10")
+  number: 0
+  skip: match(python, "<3.11")
   script:
     - if: arm64 and osx
       then:
@@ -21,9 +21,7 @@ build:
         - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)
         - ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir
         - ${PYTHON} -m pip install dist/dipy*.whl
-    - if: not (arm64 and osx)
-      then: ${{ PYTHON }} -m pip install . -vv
-
+      else: ${{ PYTHON }} -m pip install . -vv
 requirements:
   build:
     - if: build_platform != target_platform
@@ -43,6 +41,7 @@ requirements:
     - python-build
     - meson-python
     - numpy
+    - scipy
     - ninja
     - pkg-config
     - cython
@@ -50,18 +49,13 @@ requirements:
     - packaging
   run:
     - python
-    - numpy >=1.21.4
-    - scipy
-    - nibabel
-    - trx-python
-    - scikit-learn
-    - matplotlib-base
-    - pytables
-    - tqdm
-    - h5py
-    - pandas
-    - scikit-image
-    - statsmodels
+    - numpy >=1.22.4
+    - scipy >=1.8
+    - nibabel >=3.0.0
+    - trx-python >=0.4.0
+    - tqdm >=4.30.0
+    - h5py >=3.1.0
+    - packaging >=21
 
 tests:
   - python:
