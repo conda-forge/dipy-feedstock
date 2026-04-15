@@ -15,13 +15,16 @@ build:
   number: 1
   skip: match(python, "<3.11")
   script:
-    - if: arm64 and osx
+    - if: build_platform != target_platform
       then:
+        - ${BUILD_PREFIX}/bin/python -c "import os, pathlib; pre=pathlib.Path(os.environ['PREFIX'],'lib'); p=next((x for x in pre.rglob('numpy/_core/include') if x.is_dir()), None) or next((x for x in pre.rglob('numpy/core/include') if x.is_dir()), None); open('numpy_cross.ini','w').write(f\"[properties]\nnumpy-include-dir = '{p}'\n\")"
         - mkdir builddir
-        - ${PYTHON} $(which meson) setup ${MESON_ARGS} builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)
+        - ${PYTHON} $(which meson) setup ${MESON_ARGS} --cross-file numpy_cross.ini builddir || (cat builddir/meson-logs/meson-log.txt && exit 1)
         - ${PYTHON} -m build --wheel --no-isolation --skip-dependency-check -Cbuilddir=builddir
         - ${PYTHON} -m pip install dist/dipy*.whl
-      else: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+    - if: build_platform == target_platform
+      then:
+        - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 requirements:
   build:
     - if: build_platform != target_platform
