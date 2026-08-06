@@ -12,7 +12,7 @@ source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/${{ name }}-${{ version }}.tar.gz
   sha256: d9690eb29ab10c6acd7b8e93988b87c80bbb927b091c8f78f2c65b40122c71dd
 build:
-  number: 0
+  number: 1
   skip: match(python, "<3.11")
   script:
     - if: build_platform != target_platform
